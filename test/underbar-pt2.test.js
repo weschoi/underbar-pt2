@@ -253,6 +253,48 @@ describe('underbar part 2', () => {
       expect(memoAdd(3, 4)).toEqual(7);
       expect(memoAdd(1, 3)).toEqual(4);
     });
+
+    it('should not run the memoized function twice when given a primitive type as an argument', function() {
+      // Here, we wrap a dummy function in a spy. A spy is a wrapper function (much like _.memoize
+      // or _.once) that keeps track of interesting information about the function it's spying on;
+      // e.g. whether or not the function has been called.
+      const spy = jest.fn(function() { return 'Dummy output'; });
+      const memoSpy = _.memoize(spy);
+
+      memoSpy(10);
+      expect(spy).toBeCalled();
+      expect(spy.mock.calls.length).toBe(1);
+
+      memoSpy(10);
+      expect(spy).toBeCalled();
+      expect(spy.mock.calls.length).toBe(1);
+    });
+
+    it('should not run the memoized function twice when given a reference type as an argument', function() {
+      // Be careful how you are checking if a set of arguments has been passed in already.
+      const spy = jest.fn(function() { return 'Dummy output'; });
+      const memoSpy = _.memoize(spy);
+
+      memoSpy([1, 2, 3]);
+      expect(spy).toBeCalled();
+      expect(spy.mock.calls.length).toBe(1);
+
+      memoSpy([1, 2, 3]);
+      expect(spy.mock.calls.length).toBe(1);
+    });
+
+    it('should run the memoized function twice when given an array and then given a list of arguments', function() {
+      // Be careful how you are checking if a set of arguments has been passed in already
+      const spy = jest.fn(function() { return 'Dummy output'; });
+      const memoSpy = _.memoize(spy);
+
+      memoSpy([1, 2, 3]);
+      expect(spy).toBeCalled();
+      expect(spy.mock.calls.length).toBe(1);
+
+      memoSpy(1, 2, 3);
+      expect(spy.mock.calls.length).toBe(2);
+    });
   });
 
   describe('delay', function() {
