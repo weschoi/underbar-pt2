@@ -96,11 +96,13 @@ describe('underbar part 2', () => {
     });
 
     it('should not copy a property if that key is already set on the target', function() {
-      const destination = { a: 10 };
-      const source = { a: 1 };
+      const destination = { a: 10, b: 2 };
+      const source = { a: 1, b: 3, c: 'foo' };
 
       _.defaults(destination, source);
 
+      expect(destination.c).toEqual('foo');
+      expect(destination.b).toEqual(3);
       expect(destination.a).toEqual(10);
     });
 
@@ -124,14 +126,15 @@ describe('underbar part 2', () => {
        * You can check the coerced boolean with either `Boolean(myValue)` or `!!myValue`
        *
        * This could be a problem because falsy values are valid in our object. If we aren't
-       * precise enough with our conditional check, we might get these unexpected results
+       * precise enough with our conditional check, we might get these unexpected results.
        */
 
       const destination = {a: '', b: 0, c: NaN };
-      const source = { a: 1, b: 2, c: 3 };
+      const source = { a: 1, b: 2, c: 3, d: 4 };
 
       _.defaults(destination, source);
 
+      expect(destination.d).toEqual(4);
       expect(destination.a).toEqual('');
       expect(destination.b).toEqual(0);
       expect(isNaN(destination.c)).toEqual(true);
@@ -220,11 +223,12 @@ describe('underbar part 2', () => {
     });
 
     it('should not be in the same order as the original object', function() {
-      const numbers = [4, 5, 6, 7, 8, 9, 10];
+      const numbers = Array.from(Array(100000).keys()); // creates an array of [0, 1, 3, ... , 9999]
       const shuffled = _.shuffle(numbers);
 
-      // This test will fail 1/9! times
-      expect(shuffled).not.toEqual([4, 5, 6, 7, 8, 9, 10]);
+      // This test will fail 1/100000 times :)
+      expect(shuffled).toBeDefined();
+      expect(shuffled).not.toEqual(numbers);
     });
   });
 

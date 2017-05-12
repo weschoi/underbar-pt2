@@ -20,7 +20,8 @@ module.exports = {
         "semi": [
             "error",
             "always"
-        ]
+        ],
+        "no-console": "off"
     },
     "globals": {
         "console": false,
