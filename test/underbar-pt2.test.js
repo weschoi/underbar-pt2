@@ -102,7 +102,7 @@ describe('underbar part 2', () => {
       _.defaults(destination, source);
 
       expect(destination.c).toEqual('foo');
-      expect(destination.b).toEqual(3);
+      expect(destination.b).toEqual(2);
       expect(destination.a).toEqual(10);
     });
 
