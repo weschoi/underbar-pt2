@@ -1,4 +1,4 @@
-const _ = require('../solutions/underbar-part2');
+const _ = require('../underbar-pt2');
 
 // The test framework has overridden the JavaScript timing facilities so we can control time precisely
 // for testing purposes.
