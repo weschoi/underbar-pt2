@@ -21,12 +21,25 @@ const { each } = require('./underbar-pt1');
 const extend = function(obj) {
   // Your code here
   // Hint: remember that Array.from can convert an array-like object to handy-dandy array for you.
+  each(Array.from(arguments).slice(1), function(object) {
+    each(object, function(prop, key) {
+      obj[key] = prop;;
+    });
+  });
+  return obj
 };
 
 // Like extend, but doesn't ever overwrite a key that already
 // exists in obj
 const defaults = function(obj) {
   // Your code here
+  each(Array.from(arguments).slice(1), function(object) {
+    each(object, function(prop, key) {
+      obj[key] === undefined && (obj[key] = prop);
+    })
+  })
+  return obj;
+
 };
 
 
@@ -42,6 +55,16 @@ const defaults = function(obj) {
 // should return the previously returned value.
 const once = function(func) {
   // Hint: you're going to need to return another function that you create inside this function.
+  let alreadyCalled = false;
+  let result;
+
+  return function() {
+    if(!alreadyCalled) {
+      result = func.apply(this, arguments);
+      alreadyCalled = true
+    }
+    return result
+  }
 };
 
 // Memorize an expensive function's results by storing them. You may assume
@@ -55,6 +78,16 @@ const once = function(func) {
 const memoize = function(func) {
   // Hint: look up Function.apply
   // Your code here
+  const memoizedFunc = function() {
+    const cache = memoizedFunc.cache;
+    const key = JSON.stringify(arguments);
+    if (!cache[key]) {
+      cache[key] = func.apply(this, arguments);
+    }
+    return cache[key];
+  };
+  memoizedFunc.cache = {};
+  return memoizedFunc;
 };
 
 // Delays a function for the given number of milliseconds, and then calls
@@ -66,6 +99,10 @@ const memoize = function(func) {
 const delay = function(func, wait) {
   // Hint: delay things with the global function setTimeout()
   // Hint: look up Function.apply
+  const args = Array.prototype.slice.call(arguments, 2);
+  setTimeout(function() {
+    return func.apply(null, args);
+  }, wait);
 };
 
 // Randomizes the order of an array's contents.
@@ -76,6 +113,22 @@ const delay = function(func, wait) {
 const shuffle = function(arr) {
   // Hint: See http://bost.ocks.org/mike/shuffle/ for an in-depth explanation of the
   // Fisher-Yates Shuffle
+
+  let out = arr.slice();
+  let currentIdx = arr.length - 1;
+  let temp, swapIdx;
+
+  while (currentIdx) {
+    swapIdx = Math.floor(Math.random() * currentIdx);
+
+    currentIdx -= 1;
+
+    temp = out[currentIdx];
+    out[currentIdx] = out[swapIdx];
+    out[swapIdx] = temp;
+  }
+
+  return out;
 };
 
 module.exports = {
